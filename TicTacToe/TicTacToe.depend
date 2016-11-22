@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1479794126 source:a:\documents\github\gallery\tictactoe\src\button.cpp
+	"button.h"
+
+1479794126 source:a:\documents\github\gallery\tictactoe\src\hello.cpp
+	<SDL.h>
+	<SDL_image.h>
+	<hello.h>
+	<cstdio>
+
