@@ -8,3 +8,12 @@
 	<hello.h>
 	<cstdio>
 
+1479923321 source:c:\users\hunter esler\documents\github\gallery\tictactoe\src\button.cpp
+	"button.h"
+
+1479923321 source:c:\users\hunter esler\documents\github\gallery\tictactoe\src\hello.cpp
+	<SDL.h>
+	<SDL_image.h>
+	<hello.h>
+	<cstdio>
+
