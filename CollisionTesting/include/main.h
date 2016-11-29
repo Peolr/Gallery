@@ -7,11 +7,7 @@
 #include <box.h>
 #include <Polygon.h>
 
-struct Vector2
-{
-  float x;
-  float y;
-};
+
 
 SDL_Renderer* renderer;//Renderer
 SDL_Window* window;//Window

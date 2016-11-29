@@ -44,11 +44,15 @@
 			<Add directory="C:/Users/Hunter Esler/Documents/libraries/SDL2_ttf-2.0.14/i686-w64-mingw32/lib" />
 			<Add directory="C:/Users/Hunter Esler/Documents/libraries/SDL2_image-2.0.1/i686-w64-mingw32/lib" />
 		</Linker>
+		<Unit filename="include/MTV.h" />
 		<Unit filename="include/Polygon.h" />
+		<Unit filename="include/Vector2.h" />
 		<Unit filename="include/box.h" />
 		<Unit filename="include/collision.h" />
 		<Unit filename="include/main.h" />
+		<Unit filename="src/MTV.cpp" />
 		<Unit filename="src/Polygon.cpp" />
+		<Unit filename="src/Vector2.cpp" />
 		<Unit filename="src/box.cpp" />
 		<Unit filename="src/collision.cpp" />
 		<Unit filename="src/main.cpp" />

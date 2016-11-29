@@ -2,46 +2,56 @@
 #define POLYGON_H
 
 #include <SDL.h>
+#include <Vector2.h>
 #include <vector>
+#include <MTV.h>
 
 
 class Polygon
 {
 public:
-    Polygon(float x, float y);
+    Polygon(double x, double y);
     virtual ~Polygon();
 
-    float x;
-    float y;
+    double x;
+    double y;
 
-    float vx;
-    float vy;
+    double r;
 
-    float dx;
-    float dy;
+    double vx;
+    double vy;
+
+    double dx;
+    double dy;
+
+    double xMin, xMax, yMin, yMax;
 
     bool frozen;
 
     int color[4];
 
-    SDL_Point center;
+    Vector2 center;
 
 
     void render(SDL_Renderer* renderer);
     void update(int delta);
 
-    std::vector<SDL_Point> points;
+    std::vector<Vector2> points;
 
-    std::vector<SDL_Point> getPoints();
+    std::vector<Vector2> getPoints();
     void addPoints( int argumentAmount, ... );
 
     void setCenter();
 
-    std::vector<SDL_Point> getAxes();
-    SDL_Point project(SDL_Point axis);
-    bool isColliding(Polygon shape2);
+    std::vector<Vector2> getAxes();
+    Vector2 project(Vector2 axis);
+    MTV isColliding(Polygon shape2);
 
-    SDL_Point getRealPos(SDL_Point p);
+    Vector2 getRealPos(Vector2 p);
+    std::vector<Vector2> real;
+    std::vector<Vector2> getRealPoints();
+
+    void reCalc();
 
 protected:
 

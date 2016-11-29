@@ -1,6 +1,9 @@
 #include "main.h"
 #include <SDL.h>
 #include <cstdio>
+#include <MTV.h>
+#include <math.h>
+#include <vector>
 
 //Boolean to check if we should quit the program (press the x button)
 bool quit;
@@ -19,14 +22,18 @@ box b2(0, 400, 400, 40);
 void collisiontest(box& b, box& b2);
 
 
-Polygon p(100.0, 20.0);
+Polygon p(150.0,150.0);
 Polygon p2(25.0,25.0);
+std::vector<Vector2> p3;
+
 
 //Main function
-int main( int argc, char* args[] ) {
+int main( int argc, char* args[] )
+{
 
     //Does initialization return true?
-    if (init()) {
+    if (init())
+    {
 
         //We don't want to quit!
         quit = false;
@@ -45,22 +52,30 @@ int main( int argc, char* args[] ) {
 
         b2.frozen = true;
 
+        double s = 25.0;
+        int sc = 3;
+       // p.addPoints((6*2), 99, 200,310, 218,253, 3,46, 0,0, 66,35, 155);//((3*2), 0,0, s,0, s,s );
+        p2.addPoints((3*2), 0.0,0.0, s,0.0, s,s );
+        p.addPoints((3*2), 0.0,0.0, s,0.0, s,s );
 
-        p.addPoints((4*2), 5*5,5*5, 20*5,0*5, 15*5,15*5, 0*5,20*5);
-        p2.addPoints((4*2), 5,5, 20,0, 15,15, 0,20);
 
 
         //Main game loop
-        while (!quit) {
+        while (!quit)
+        {
 
             //Set the current tick
             curTick = SDL_GetTicks();
 
             //Go through all of the events since last run-through!
-            while (SDL_PollEvent(&e) != 0) {
-                if (e.type==SDL_QUIT) { //Did we close the game?
+            while (SDL_PollEvent(&e) != 0)
+            {
+                if (e.type==SDL_QUIT)   //Did we close the game?
+                {
                     quit = true;
-                } else if (e.type==SDL_MOUSEBUTTONDOWN) { //Was the mouse pressed once?
+                }
+                else if (e.type==SDL_MOUSEBUTTONDOWN)     //Was the mouse pressed once?
+                {
                     mouseClick();
                 }
             }
@@ -70,45 +85,91 @@ int main( int argc, char* args[] ) {
 
             const Uint8* keyStates = SDL_GetKeyboardState(NULL);
 
-            if (keyStates[SDL_SCANCODE_D]) {
+            if (keyStates[SDL_SCANCODE_D])
+            {
                 b.vx = 10;
-            } else if (keyStates[SDL_SCANCODE_A]) {
+            }
+            else if (keyStates[SDL_SCANCODE_A])
+            {
                 b.vx = -10;
-            } else {
+            }
+            else
+            {
                 b.vx = 0;
             }
 
             //Has enough time passed to render the next frame?
-            if (curTick>=nextFrame) {
+            if (curTick>=nextFrame)
+            {
                 delta = (curTick - lastTick)/1000.0;
                 lastTick = curTick;
 
                 nextFrame = curTick+ticksPerFrame;
                 countedFrames++;
                 //Has it been a second? Print the fps!
-                if (startTick+1000 < SDL_GetTicks()) {
+                if (startTick+1000 < SDL_GetTicks())
+                {
                     printf("FPS : %i\n",countedFrames);
                     countedFrames = 0;
                     startTick = SDL_GetTicks();
                 }
 
-                render();
+                double speed = 50;
 
+                const Uint8 *keys = SDL_GetKeyboardState(NULL);
+                if (keys[SDL_SCANCODE_D])
+                {
+                    p2.x += speed * delta;
+                }
+                else if (keys[SDL_SCANCODE_A])
+                {
+                    p2.x -= speed * delta;
+                }
 
-                b.vy += delta * 9.8;
-                p2.vx = .5;
-                if (p.isColliding(p2)) {
-            printf("colliding true!\n");
-        } else {
-            printf("not colliding!\n");
-        }
-               // b.x = mouseX - b.w/2;
-                //b.y = mouseY - b.h/2;
+                if (keys[SDL_SCANCODE_S])
+                {
+                    p2.y += speed * delta;
+                }
+                else if (keys[SDL_SCANCODE_W])
+                {
+                    p2.y -= speed * delta;
+                }
+
+                if (keys[SDL_SCANCODE_E]) {
+                    p2.r+=1*delta;
+                } else if(keys[SDL_SCANCODE_Q]) {
+                    p2.r-=1*delta;
+                }
+
 
                 b.update(delta);
                 b2.update(delta);
 
+                p.update(delta);
                 p2.update(delta);
+
+                b.vy += delta * 9.8;
+                //p2.vx = .5;
+                MTV tt = p2.isColliding(p);
+                if (tt.o >= 0)
+                {
+                   // printf("o: %9.6f\n", tt.o);
+                    p2.x -= tt.axis.x;
+                    p2.y -= tt.axis.y;
+                    // printf("colliding true!\n");
+                }
+                else
+                {
+                    // printf("not colliding!\n");
+                }
+                // b.x = mouseX - b.w/2;
+                //b.y = mouseY - b.h/2;
+
+               // p.r+=0.174533*delta;
+
+
+
+
 
                 collisiontest(b, b2);
 
@@ -116,18 +177,39 @@ int main( int argc, char* args[] ) {
 
                 std::vector<SDL_Point> e = b.getPoints();
 
-                for (SDL_Point p : e) {
+                for (SDL_Point p : e)
+                {
                     //printf("x: %i, y: %i\n", p.x, p.y);
                 }
 
+                p3.clear();
 
-               // SDL_Delay(ticksPerFrame);
+                std::vector<Vector2> points1 = p.getRealPoints();
+                std::vector<Vector2> points2 = p2.getRealPoints();
+                for (int i = 0, m = points1.size(); i < m; i++) {
+
+                    for (int u = 0, mu = points2.size(); u < mu; u++) {
+                        double x = (points1[i].x - points2[u].x) + 25;
+                        double y = (points1[i].y - points2[u].y) + 25;
+                        p3.insert(p3.end(), Vector2(x,y));
+                       // printf("%9.6f : %9.6f\n",x,y);
+                    }
+
+                }
+
+              //  printf("%i size\n", p3.points.size());
+
+
+                render();
+                // SDL_Delay(ticksPerFrame);
             }
 
 
         }
 
-    } else {
+    }
+    else
+    {
         printf("Failed to initialize!");
     }
 
@@ -139,14 +221,20 @@ int main( int argc, char* args[] ) {
     return 0;
 }
 
-void collisiontest(box& b1, box& b2) {
+void collisiontest(box& b1, box& b2)
+{
 
-    if (((b1.x < b2.x + b2.w) && (b1.y < b2.y + b2.h)) && ((b2.x < b1.x + b1.w) && (b2.y < b1.y + b1.h))) {
-       // printf("collide!\n");
-        if (b1.y + b1.h > b2.y) {
-            if (b1.dy > 0) {
+    if (((b1.x < b2.x + b2.w) && (b1.y < b2.y + b2.h)) && ((b2.x < b1.x + b1.w) && (b2.y < b1.y + b1.h)))
+    {
+        // printf("collide!\n");
+        if (b1.y + b1.h > b2.y)
+        {
+            if (b1.dy > 0)
+            {
                 b1.y -= (b1.y+b1.h)-b2.y;;
-            } else if (b1.dy < 0) {
+            }
+            else if (b1.dy < 0)
+            {
                 b1.y += (b2.y + b2.h) - b1.y;
             }
             b1.vy = 0;
@@ -158,25 +246,33 @@ void collisiontest(box& b1, box& b2) {
 }
 
 
-bool init() {
+bool init()
+{
 
 
     bool success = true;
 
     //Init video
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
         printf("Failed to initialize video! %s\n", SDL_GetError());
         success = false;
-    } else {
+    }
+    else
+    {
         //Make window
         window = SDL_CreateWindow("Test window!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_SHOWN);
-        if (window==NULL) {
+        if (window==NULL)
+        {
             printf("Could not create window! %s\n", SDL_GetError());
             success = false;
-        } else {
+        }
+        else
+        {
             //Make renderer
             renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-            if (renderer==NULL) {
+            if (renderer==NULL)
+            {
                 printf("Could not create renderer! %s\n", SDL_GetError());
                 success = false;
             }
@@ -186,14 +282,18 @@ bool init() {
 }
 
 //Load a texture from a string and return the created texture!
-SDL_Texture* loadTexture(std::string s) {
+SDL_Texture* loadTexture(std::string s)
+{
     SDL_Surface* loadedSurface = IMG_Load(s.c_str());
-    if (loadedSurface==NULL) {
+    if (loadedSurface==NULL)
+    {
         printf("Could not load image! %s\n", IMG_GetError());
         SDL_FreeSurface(loadedSurface);
-    } else {
+    }
+    else
+    {
 
-       //Convert Surface to Texture!
+        //Convert Surface to Texture!
         SDL_Texture* newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
         //Allow for alpha in png!
         SDL_SetTextureBlendMode(newTexture, SDL_BLENDMODE_BLEND);
@@ -204,7 +304,8 @@ SDL_Texture* loadTexture(std::string s) {
 }
 
 //Render a texture with position and size
-bool renderTexture(SDL_Renderer* r, SDL_Texture* t, int x, int y, int w, int h) {
+bool renderTexture(SDL_Renderer* r, SDL_Texture* t, int x, int y, int w, int h)
+{
 
     SDL_Rect rect = {x,y,w,h};
     SDL_RenderCopy(r, t, NULL, &rect);
@@ -215,11 +316,13 @@ bool renderTexture(SDL_Renderer* r, SDL_Texture* t, int x, int y, int w, int h) 
 
 
 //Calculate clicks
-void mouseClick() {
+void mouseClick()
+{
 }
 
 
-bool render() {
+bool render()
+{
     SDL_RenderClear(renderer); // Clear our screen
 
 
@@ -228,6 +331,26 @@ bool render() {
     //b2.render(renderer);
     p.render(renderer);
     p2.render(renderer);
+    for (int i = 0, m=p3.size(); i < m; i++)
+    {
+        int i2 = i + 1 == m ? 0 : i + 1;
+        // get the current vertex
+        Vector2 p1 = Vector2(p3[i].x,p3[i].y);
+        // get the next vertex
+        Vector2 p2 = Vector2(p3[i2].x,p3[i2].y);
+        //Vector2 pos = Vector2(x,y);
+
+
+
+
+        SDL_RenderDrawLine(renderer, (p1.x), (p1.y), (p2.x), (p2.y));
+
+       // SDL_RenderDrawPoint(renderer, x,y);
+    }
+
+    SDL_RenderDrawPoint(renderer, 25, 25);
+
+    //SDL_RenderDrawPoint(renderer, p.x + p2.x, p.y + p2.y);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     //Present our screen to the window!

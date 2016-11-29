@@ -358,3 +358,56 @@
 
 1479965493 c:\users\hunter esler\documents\github\gallery\collisiontesting\include\collision.h
 
+1480288212 source:a:\documents\github\gallery\collisiontesting\src\box.cpp
+	"box.h"
+	<SDL.h>
+
+1480288212 a:\documents\github\gallery\collisiontesting\include\box.h
+	<SDL.h>
+	<vector>
+
+1480288212 source:a:\documents\github\gallery\collisiontesting\src\collision.cpp
+	"collision.h"
+
+1480288212 a:\documents\github\gallery\collisiontesting\include\collision.h
+
+1480436647 source:a:\documents\github\gallery\collisiontesting\src\main.cpp
+	"main.h"
+	<SDL.h>
+	<cstdio>
+	<MTV.h>
+	<math.h>
+	<vector>
+
+1480373385 a:\documents\github\gallery\collisiontesting\include\main.h
+	<SDL.h>
+	<SDL_image.h>
+	<string>
+	<box.h>
+	<Polygon.h>
+
+1480436164 a:\documents\github\gallery\collisiontesting\include\polygon.h
+	<SDL.h>
+	<Vector2.h>
+	<vector>
+	<MTV.h>
+
+1480436446 source:a:\documents\github\gallery\collisiontesting\src\polygon.cpp
+	"Polygon.h"
+	<SDL.h>
+	<stdio.h>
+	<cstdlib>
+	<limits>
+
+1480373164 source:a:\documents\github\gallery\collisiontesting\src\vector2.cpp
+	"Vector2.h"
+	<math.h>
+
+1480373206 a:\documents\github\gallery\collisiontesting\include\vector2.h
+
+1480375869 a:\documents\github\gallery\collisiontesting\include\mtv.h
+	<Vector2.h>
+
+1480375674 source:a:\documents\github\gallery\collisiontesting\src\mtv.cpp
+	"MTV.h"
+
