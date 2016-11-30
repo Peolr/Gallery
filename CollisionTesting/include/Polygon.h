@@ -11,6 +11,7 @@ class Polygon
 {
 public:
     Polygon(double x, double y);
+    Polygon();
     virtual ~Polygon();
 
     double x;
@@ -32,7 +33,7 @@ public:
 
     Vector2 center;
 
-
+    void setup(double x, double y);
     void render(SDL_Renderer* renderer);
     void update(int delta);
 

@@ -46,12 +46,14 @@
 		</Linker>
 		<Unit filename="include/MTV.h" />
 		<Unit filename="include/Polygon.h" />
+		<Unit filename="include/SAT.h" />
 		<Unit filename="include/Vector2.h" />
 		<Unit filename="include/box.h" />
 		<Unit filename="include/collision.h" />
 		<Unit filename="include/main.h" />
 		<Unit filename="src/MTV.cpp" />
 		<Unit filename="src/Polygon.cpp" />
+		<Unit filename="src/SAT.cpp" />
 		<Unit filename="src/Vector2.cpp" />
 		<Unit filename="src/box.cpp" />
 		<Unit filename="src/collision.cpp" />

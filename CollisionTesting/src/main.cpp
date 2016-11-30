@@ -4,6 +4,7 @@
 #include <MTV.h>
 #include <math.h>
 #include <vector>
+#include <SAT.h>
 
 //Boolean to check if we should quit the program (press the x button)
 bool quit;
@@ -25,6 +26,8 @@ void collisiontest(box& b, box& b2);
 Polygon p(150.0,150.0);
 Polygon p2(25.0,25.0);
 std::vector<Vector2> p3;
+
+SAT Collision = SAT();
 
 
 //Main function
@@ -150,8 +153,8 @@ int main( int argc, char* args[] )
 
                 b.vy += delta * 9.8;
                 //p2.vx = .5;
-                MTV tt = p2.isColliding(p);
-                if (tt.o >= 0)
+                MTV tt = Collision.checkCollision(p2, p);
+                if (tt.collided)
                 {
                    // printf("o: %9.6f\n", tt.o);
                     p2.x -= tt.axis.x;

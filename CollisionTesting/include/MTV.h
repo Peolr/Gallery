@@ -7,9 +7,12 @@ class MTV
 {
     public:
         MTV(Vector2 axis, double o);
+        MTV(bool f);
         virtual ~MTV();
+
         Vector2 axis;
         double o;
+        bool collided;
 
     protected:
 
