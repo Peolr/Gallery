@@ -1,10 +1,13 @@
 #include "main.h"
 #include <SDL.h>
-#include <cstdio>
+
 #include <MTV.h>
 #include <math.h>
 #include <vector>
 #include <SAT.h>
+#include <testheader.h>
+#include <sstream>
+
 
 //Boolean to check if we should quit the program (press the x button)
 bool quit;
@@ -27,8 +30,9 @@ Polygon p(150.0,150.0);
 Polygon p2(25.0,25.0);
 std::vector<Vector2> p3;
 
-SAT Collision = SAT();
+Uint32 fps = 0;
 
+Font f(1);
 
 //Main function
 int main( int argc, char* args[] )
@@ -37,7 +41,7 @@ int main( int argc, char* args[] )
     //Does initialization return true?
     if (init())
     {
-
+        testheaderi = 2;
         //We don't want to quit!
         quit = false;
 
@@ -62,6 +66,10 @@ int main( int argc, char* args[] )
         p.addPoints((3*2), 0.0,0.0, s,0.0, s,s );
 
 
+        gFont = TTF_OpenFont( "ttfs/Marlboro.ttf", 28 );
+        if (gFont==NULL) {
+            printf("couldn't load font lol\n");
+        }
 
         //Main game loop
         while (!quit)
@@ -113,6 +121,7 @@ int main( int argc, char* args[] )
                 if (startTick+1000 < SDL_GetTicks())
                 {
                     printf("FPS : %i\n",countedFrames);
+                    fps = countedFrames;
                     countedFrames = 0;
                     startTick = SDL_GetTicks();
                 }
@@ -153,7 +162,7 @@ int main( int argc, char* args[] )
 
                 b.vy += delta * 9.8;
                 //p2.vx = .5;
-                MTV tt = Collision.checkCollision(p2, p);
+                MTV tt = checkCollision(p2, p);
                 if (tt.collided)
                 {
                    // printf("o: %9.6f\n", tt.o);
@@ -190,7 +199,6 @@ int main( int argc, char* args[] )
                 std::vector<Vector2> points1 = p.getRealPoints();
                 std::vector<Vector2> points2 = p2.getRealPoints();
                 for (int i = 0, m = points1.size(); i < m; i++) {
-
                     for (int u = 0, mu = points2.size(); u < mu; u++) {
                         double x = (points1[i].x - points2[u].x) + 25;
                         double y = (points1[i].y - points2[u].y) + 25;
@@ -263,6 +271,14 @@ bool init()
     }
     else
     {
+
+         //Initialize SDL_ttf
+        if( TTF_Init() == -1 )
+        {
+            printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+            success = false;
+        }
+
         //Make window
         window = SDL_CreateWindow("Test window!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_SHOWN);
         if (window==NULL)
@@ -304,6 +320,23 @@ SDL_Texture* loadTexture(std::string s)
         return newTexture;
     }
     return NULL;
+}
+
+SDL_Texture* renderText(SDL_Texture* texture, std::string text, SDL_Color color) {
+
+    SDL_Surface* textSurface = TTF_RenderText_Solid(gFont, text.c_str(), color);
+    if (textSurface == NULL) {
+
+        printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+    } else {
+
+        if (texture!=NULL) {
+            SDL_DestroyTexture(texture);
+        }
+        texture = SDL_CreateTextureFromSurface(renderer, textSurface);
+
+        SDL_FreeSurface(textSurface);
+    }
 }
 
 //Render a texture with position and size
@@ -355,9 +388,22 @@ bool render()
 
     //SDL_RenderDrawPoint(renderer, p.x + p2.x, p.y + p2.y);
 
+
+
+
+    std::stringstream s;
+    s.str("");
+    s<<fps;
+    SDL_Color col = {0,255,0,255};
+
+    f.renderText(renderer, s.str().c_str(), col, gFont);
+    SDL_SetRenderDrawColor(renderer, 255,255,255,255);
+    f.render(renderer, 5, 5);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     //Present our screen to the window!
     SDL_RenderPresent(renderer);
+
+    //printf("fps lol: %s\n", s.str().c_str());
 
     return true;
 }

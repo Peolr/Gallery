@@ -1,16 +1,14 @@
 #include "SAT.h"
 
-SAT::SAT()
-{}
 
-MTV SAT::checkCollision(Polygon a, Polygon b) {
+MTV checkCollision(Polygon a, Polygon b) {
 
     MTV res = isColliding(a, b);
     return res;
 
 }
 
-MTV SAT::isColliding(Polygon shape1, Polygon shape2) {
+MTV isColliding(Polygon shape1, Polygon shape2) {
 
     std::vector<Vector2> axes1 = shape1.getAxes();
     std::vector<Vector2> axes2 = shape2.getAxes();
@@ -81,7 +79,7 @@ MTV SAT::isColliding(Polygon shape1, Polygon shape2) {
 
 }
 
-Vector2 SAT::projectPolygon(Polygon p, Vector2 axis) {
+Vector2 projectPolygon(Polygon p, Vector2 axis) {
 
     int x = p.x;
     int y = p.y;

@@ -371,20 +371,25 @@
 
 1480288212 a:\documents\github\gallery\collisiontesting\include\collision.h
 
-1480548716 source:a:\documents\github\gallery\collisiontesting\src\main.cpp
+1480813152 source:a:\documents\github\gallery\collisiontesting\src\main.cpp
 	"main.h"
 	<SDL.h>
-	<cstdio>
 	<MTV.h>
 	<math.h>
 	<vector>
+	<SAT.h>
+	<testheader.h>
+	<sstream>
 
-1480373385 a:\documents\github\gallery\collisiontesting\include\main.h
+1480811542 a:\documents\github\gallery\collisiontesting\include\main.h
 	<SDL.h>
 	<SDL_image.h>
 	<string>
 	<box.h>
 	<Polygon.h>
+	<SDL_ttf.h>
+	<cstdio>
+	<Font.h>
 
 1480547925 a:\documents\github\gallery\collisiontesting\include\polygon.h
 	<SDL.h>
@@ -412,14 +417,25 @@
 1480548674 source:a:\documents\github\gallery\collisiontesting\src\mtv.cpp
 	"MTV.h"
 
-1480549525 source:a:\documents\github\gallery\collisiontesting\src\sat.cpp
+1480808761 source:a:\documents\github\gallery\collisiontesting\src\sat.cpp
 	"SAT.h"
 
-1480549594 a:\documents\github\gallery\collisiontesting\include\sat.h
+1480808744 a:\documents\github\gallery\collisiontesting\include\sat.h
 	<Polygon.h>
 	<Vector2.h>
 	<vector>
 	<limits>
 	<cmath>
 	<cstdlib>
+
+1480813531 source:a:\documents\github\gallery\collisiontesting\src\font.cpp
+	"Font.h"
+
+1480813534 a:\documents\github\gallery\collisiontesting\include\font.h
+	<SDL.h>
+	<string>
+	<SDL_ttf.h>
+	<cstdio>
+
+1480808686 a:\documents\github\gallery\collisiontesting\include\testheader.h
 
