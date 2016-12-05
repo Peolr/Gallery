@@ -369,7 +369,7 @@
 
 1480288212 a:\documents\github\gallery\collisiontesting\include\collision.h
 
-1480917160 source:a:\documents\github\gallery\collisiontesting\src\main.cpp
+1480955423 source:a:\documents\github\gallery\collisiontesting\src\main.cpp
 	"main.h"
 
 1480912261 a:\documents\github\gallery\collisiontesting\include\main.h
@@ -389,14 +389,14 @@
 	<Box.h>
 	<Scene.h>
 
-1480914600 a:\documents\github\gallery\collisiontesting\include\polygon.h
+1480956195 a:\documents\github\gallery\collisiontesting\include\polygon.h
 	<SDL.h>
 	<Vector2.h>
 	<vector>
 	<MTV.h>
 	<Entity.h>
 
-1480916660 source:a:\documents\github\gallery\collisiontesting\src\polygon.cpp
+1480956393 source:a:\documents\github\gallery\collisiontesting\src\polygon.cpp
 	"Polygon.h"
 	<SDL.h>
 	<stdio.h>
@@ -416,11 +416,11 @@
 1480884564 source:a:\documents\github\gallery\collisiontesting\src\mtv.cpp
 	"MTV.h"
 
-1480917079 source:a:\documents\github\gallery\collisiontesting\src\sat.cpp
+1480954245 source:a:\documents\github\gallery\collisiontesting\src\sat.cpp
 	"SAT.h"
 	<cstdio>
 
-1480913565 a:\documents\github\gallery\collisiontesting\include\sat.h
+1480953715 a:\documents\github\gallery\collisiontesting\include\sat.h
 	<Polygon.h>
 	<Vector2.h>
 	<vector>
@@ -461,7 +461,7 @@
 	<vector>
 	<Entity.h>
 
-1480913938 source:a:\documents\github\gallery\collisiontesting\src\scene.cpp
+1480956399 source:a:\documents\github\gallery\collisiontesting\src\scene.cpp
 	"Scene.h"
 	<Box.h>
 	<cstdio>
@@ -470,11 +470,11 @@
 	"SceneController.h"
 	<cstdio>
 
-1480915171 source:a:\documents\github\gallery\collisiontesting\src\entity.cpp
+1480956176 source:a:\documents\github\gallery\collisiontesting\src\entity.cpp
 	"Entity.h"
 	<cstdio>
 
-1480914651 a:\documents\github\gallery\collisiontesting\include\entity.h
+1480956182 a:\documents\github\gallery\collisiontesting\include\entity.h
 	<vector>
 	<Polygon.h>
 	<SDL.h>

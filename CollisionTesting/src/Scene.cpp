@@ -20,7 +20,7 @@ Scene::~Scene()
 bool Scene::render(SDL_Renderer* renderer) {
     bool success = true;
     for (int i = 0, m = entities.size(); i < m; i++) {
-        entities[i]->render(renderer, cameraX, cameraY, (zoom/100.0));
+        entities[i]->render(renderer);
     }
 
     return success;

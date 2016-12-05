@@ -18,15 +18,18 @@ int main( int argc, char* args[] )
         Entity* ent = new Entity(0.0, 300.0);
         Entity* ent2 = new Entity(0.0, 400.0);
 
-        Box poly(0.0,0.0,30.0,30.0);
-        Box poly2(30.0,0.0,30.0,30.0);
+        Polygon* poly = new Box(0.0,0.0,30.0,30.0);
+        Polygon* poly2 = new Box(30.0,0.0,30.0,30.0);
         ent->addPolygon(poly);
         ent->addPolygon(poly2);
 
+        //scene->moveCamera(0,200);
+
+        scene->zoom = 100.0;
 
 
 
-        Box poly22(0.0,0.0,600.0,30.0);
+        Polygon* poly22 = new Box(0.0,0.0,600.0,30.0);
         ent2->addPolygon(poly22);
 
 
@@ -97,7 +100,7 @@ int main( int argc, char* args[] )
                 Scene* sce = sc->getCurrentScene();
 
 
-                double speed = 50.0;
+                double speed = 100.0;
 
                 const Uint8 *keys = SDL_GetKeyboardState(NULL);
                 if (keys[SDL_SCANCODE_D])
@@ -113,9 +116,9 @@ int main( int argc, char* args[] )
                 {
                     //ent->y += speed * delta;
                 }
-                else if (keys[SDL_SCANCODE_W])
+                else if (keys[SDL_SCANCODE_W] && ent->vy==0.0)
                 {
-                    ent->vy = -200*delta;
+                    ent->vy = -300*delta;
 
                 }
 
@@ -125,15 +128,15 @@ int main( int argc, char* args[] )
                     //ent->setRotation(ent->r - 1*delta);
                 }
 
+                double yy = ent->y;
+
+
                 sce->update(delta);
 
-                printf("Dy: %9.6f\n", ent->dy);
 
-                if (ent->dy == 0.0) {
-                    ent->vy = 0;
-                }
 
-                ent->vy+=9.8*delta;
+
+
 
 
                 /**/
@@ -142,10 +145,31 @@ int main( int argc, char* args[] )
                 if (collide.collided) {
                     ent->x-=collide.axis.x;
                     ent->y-=collide.axis.y;
+
+                    if (fabs(collide.axis.y)>0) {
+                        ent->vy = 0.0;
+                        ent->y = yy;
+                    }
                     //printf("collide\n");
+                } else {
+                    ent->vy+=9.8*delta;
                 }
-                /**/
-                printf("entx: %9.6f\n", ent->polygons[0].x + ent->x);
+
+                double cameraX = sce->cameraX;
+                double cameraY = sce->cameraY;
+                double xx = ent->x - cameraX;
+                yy = ent->y - cameraY;
+                int margin = 200;
+                if (xx < margin) {
+                    sce->cameraX-=(margin-xx);
+                }
+
+                if (xx > screenWidth - margin) {
+                    sce->cameraX+=(xx-(screenWidth - margin));
+                }
+
+
+
 
                 //Entity* ent = sc.getCurrentScene()->entities[0];
                 //ent->setRotation((curTick*delta*.2) );

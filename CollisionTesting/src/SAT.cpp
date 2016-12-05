@@ -3,24 +3,29 @@
 
 MTV checkCollision(Entity* a, Entity* b) {
 
-    std::vector<Polygon> polys = a->polygons;
-    std::vector<Polygon> polys2 = b->polygons;
+    std::vector<Polygon*> polys = a->polygons;
+    std::vector<Polygon*> polys2 = b->polygons;
+
+    int max = 0;
+    MTV res = MTV(false);
+
     for (int i = 0, m = polys.size(); i < m; i++) {
-        for (int i2 = 0, m2 = polys2.size(); i < m2; i++) {
-            MTV res = isColliding(polys[i], polys2[i2]);
-            if (res.collided) {
-                return res;
+        for (int i2 = 0, m2 = polys2.size(); i2 < m2; i2++) {
+            MTV cand = isColliding(polys[i], polys2[i2]);
+            if (cand.collided && cand.o > max) {
+                max = cand.o;
+                res = cand;
             }
         }
     }
-    return MTV(false);
+    return res;
 
 }
 
-MTV isColliding(Polygon shape1, Polygon shape2) {
+MTV isColliding(Polygon* shape1, Polygon* shape2) {
 
-    std::vector<Vector2> axes1 = shape1.getAxes();
-    std::vector<Vector2> axes2 = shape2.getAxes();
+    std::vector<Vector2> axes1 = shape1->getAxes();
+    std::vector<Vector2> axes2 = shape2->getAxes();
 
     double o = std::numeric_limits<double>::infinity();
     Vector2 sAxis = Vector2(0,0);
@@ -88,21 +93,18 @@ MTV isColliding(Polygon shape1, Polygon shape2) {
 
 }
 
-Vector2 projectPolygon(Polygon p, Vector2 axis) {
+Vector2 projectPolygon(Polygon* p, Vector2 axis) {
 
-    int x = p.x;
-    int y = p.y;
+    //int x = p.x;
+    //int y = p.y;
 
-    Vector2 d = Vector2(0.0,0.0);
-    d.add(Vector2(x,y));
-    d.add(Vector2(p.parent->x,p.parent->y));
+    Vector2 d = p->getRealPos(Vector2(p->points[0].x, p->points[0].y));
     double min = d.dot(axis);
     double max = min;
-    for (int i = 1, m = p.points.size(); i < m; i++)
+    for (int i = 1, m = p->points.size(); i < m; i++)
     {
         // NOTE: the axis must be normalized to get accurate projections
-        Vector2 rp = Vector2(p.points[i].x,p.points[i].y);
-        rp.add(Vector2(p.parent->x,p.parent->y));
+        Vector2 rp = p->getRealPos(Vector2(p->points[i].x,p->points[i].y));
         //printf("p.y: %i, parenty: %9.6f\n", y, p.parent->y);
         double dot = rp.dot(axis);
         if (dot < min)

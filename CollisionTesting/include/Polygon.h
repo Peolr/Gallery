@@ -39,7 +39,7 @@ public:
     Entity* parent;
 
     void setup(double x, double y);
-    void render(SDL_Renderer* renderer, double ddx = 0.0, double ddy = 0.0, double ox = 0.0, double oy = 0.0, double zoom = 1.0);
+    void render(SDL_Renderer* renderer);
     void update(int delta);
 
     std::vector<Vector2> points;

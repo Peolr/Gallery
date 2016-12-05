@@ -17,26 +17,26 @@ Entity::Entity(double x, double y)
 
 Entity::~Entity()
 {
-
+    for (int i = 0, m = polygons.size(); i < m; i++) {
+        delete polygons[i];
+    }
+    polygons.clear();
 }
 
 void Entity::setScale(double s) {
     scale = s;
     for (int i = 0, m = polygons.size(); i < m; i++) {
-        polygons[i].scale = s;
+        polygons[i]->scale = s;
     }
 }
 
 void Entity::setRotation(double r) {
     this->r = r;
-    for (int i = 0, m = polygons.size(); i < m; i++) {
-        polygons[i].r = r;
-    }
 }
 
-void Entity::render(SDL_Renderer* renderer, double offsetX, double offsetY, double zoom) {
+void Entity::render(SDL_Renderer* renderer) {
     for (int i = 0, m = polygons.size(); i < m; i++) {
-        polygons[i].render(renderer, x+offsetX, y+offsetY, ox * scale, oy * scale, zoom);
+        polygons[i]->render(renderer);
     }
 }
 
@@ -56,7 +56,7 @@ void Entity::update(double delta)
 
 
         for (int i = 0, m = polygons.size(); i < m; i++) {
-            polygons[i].reCalc();
+            polygons[i]->reCalc();
         }
 
     }
@@ -72,8 +72,8 @@ void Entity::update(double delta)
 
 }
 
-void Entity::addPolygon(Polygon p) {
-    p.scale = scale;
-    p.parent = this;
+void Entity::addPolygon(Polygon* p) {
+    p->scale = scale;
+    p->parent = this;
     polygons.insert(polygons.end(), p);
 }

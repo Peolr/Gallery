@@ -32,13 +32,13 @@ class Entity
 
         Scene* scene;
 
-        std::vector<Polygon> polygons;
+        std::vector<Polygon*> polygons;
 
-        void render(SDL_Renderer* renderer, double offsetX, double offsetY, double zoom);
+        void render(SDL_Renderer* renderer);
         void update(double delta);
         void setScale(double s);
         void setRotation(double r);
-        void addPolygon(Polygon p);
+        void addPolygon(Polygon* p);
 
     protected:
 

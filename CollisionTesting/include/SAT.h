@@ -15,8 +15,8 @@ double getOverlap(Vector2 a, Vector2 b, bool* flip);
 
 
 MTV checkCollision(Entity* a, Entity* b);
-MTV isColliding(Polygon a, Polygon b);
-Vector2 projectPolygon(Polygon p, Vector2 axis);
+MTV isColliding(Polygon* a, Polygon* b);
+Vector2 projectPolygon(Polygon* p, Vector2 axis);
 
 
 #endif // SAT_H
