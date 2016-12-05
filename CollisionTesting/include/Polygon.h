@@ -5,7 +5,8 @@
 #include <Vector2.h>
 #include <vector>
 #include <MTV.h>
-
+#include <Entity.h>
+class Entity;
 
 class Polygon
 {
@@ -25,6 +26,8 @@ public:
     double dx;
     double dy;
 
+    double scale;
+
     double xMin, xMax, yMin, yMax;
 
     bool frozen;
@@ -33,15 +36,17 @@ public:
 
     Vector2 center;
 
+    Entity* parent;
+
     void setup(double x, double y);
-    void render(SDL_Renderer* renderer);
+    void render(SDL_Renderer* renderer, double ddx = 0.0, double ddy = 0.0, double ox = 0.0, double oy = 0.0, double zoom = 1.0);
     void update(int delta);
 
     std::vector<Vector2> points;
 
     std::vector<Vector2> getPoints();
     void addPoints( int argumentAmount, ... );
-
+    void clearPoints();
     void setCenter();
 
     std::vector<Vector2> getAxes();

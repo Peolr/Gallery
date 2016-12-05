@@ -44,21 +44,27 @@
 			<Add directory="C:/Users/Hunter Esler/Documents/libraries/SDL2_ttf-2.0.14/i686-w64-mingw32/lib" />
 			<Add directory="C:/Users/Hunter Esler/Documents/libraries/SDL2_image-2.0.1/i686-w64-mingw32/lib" />
 		</Linker>
-		<Unit filename="include/Font.h" />
+		<Unit filename="include/Box.h" />
+		<Unit filename="include/Entity.h" />
+		<Unit filename="include/JTexture.h" />
 		<Unit filename="include/MTV.h" />
 		<Unit filename="include/Polygon.h" />
 		<Unit filename="include/SAT.h" />
+		<Unit filename="include/Scene.h" />
+		<Unit filename="include/SceneController.h" />
 		<Unit filename="include/Vector2.h" />
-		<Unit filename="include/box.h" />
 		<Unit filename="include/collision.h" />
 		<Unit filename="include/main.h" />
 		<Unit filename="include/testheader.h" />
-		<Unit filename="src/Font.cpp" />
+		<Unit filename="src/Box.cpp" />
+		<Unit filename="src/Entity.cpp" />
+		<Unit filename="src/JTexture.cpp" />
 		<Unit filename="src/MTV.cpp" />
 		<Unit filename="src/Polygon.cpp" />
 		<Unit filename="src/SAT.cpp" />
+		<Unit filename="src/Scene.cpp" />
+		<Unit filename="src/SceneController.cpp" />
 		<Unit filename="src/Vector2.cpp" />
-		<Unit filename="src/box.cpp" />
 		<Unit filename="src/collision.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Extensions>

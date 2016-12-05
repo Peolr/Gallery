@@ -1,52 +1,42 @@
 #include "main.h"
-#include <SDL.h>
-
-#include <MTV.h>
-#include <math.h>
-#include <vector>
-#include <SAT.h>
-#include <testheader.h>
-#include <sstream>
-
-
 //Boolean to check if we should quit the program (press the x button)
 bool quit;
 
-//Screen width and height set as constants!
-const int screenWidth = 600;
-const int screenHeight = 600;
 
-//Variables for the mouse positions!
-int mouseX;
-int mouseY;
-
-box b(20, 20, 40, 40);
-box b2(0, 400, 400, 40);
-
-void collisiontest(box& b, box& b2);
-
-
-Polygon p(150.0,150.0);
-Polygon p2(25.0,25.0);
-std::vector<Vector2> p3;
-
-Uint32 fps = 0;
-
-Font f(1);
+JTexture happy;
 
 //Main function
 int main( int argc, char* args[] )
 {
 
     //Does initialization return true?
-    if (init())
+    if (init() && loadMedia())
     {
-        testheaderi = 2;
+
+        Scene* scene = sc->newScene();
+
+        Entity* ent = new Entity(0.0, 300.0);
+        Entity* ent2 = new Entity(0.0, 400.0);
+
+        Box poly(0.0,0.0,30.0,30.0);
+        Box poly2(30.0,0.0,30.0,30.0);
+        ent->addPolygon(poly);
+        ent->addPolygon(poly2);
+
+
+
+
+        Box poly22(0.0,0.0,600.0,30.0);
+        ent2->addPolygon(poly22);
+
+
+        scene->addEntity(ent2);
+        scene->addEntity(ent);
+
         //We don't want to quit!
         quit = false;
+        fps = 0;
 
-        //SDL Event Poller
-        SDL_Event e;
 
         Uint32 countedFrames = 0;//How many frames have we counted in the last second?
         Uint8 ticksPerFrame = 1000/60;//Framerate
@@ -56,20 +46,6 @@ int main( int argc, char* args[] )
         //time between frames
         float delta = 1;
         Uint32 lastTick = startTick;
-
-        b2.frozen = true;
-
-        double s = 25.0;
-        int sc = 3;
-       // p.addPoints((6*2), 99, 200,310, 218,253, 3,46, 0,0, 66,35, 155);//((3*2), 0,0, s,0, s,s );
-        p2.addPoints((3*2), 0.0,0.0, s,0.0, s,s );
-        p.addPoints((3*2), 0.0,0.0, s,0.0, s,s );
-
-
-        gFont = TTF_OpenFont( "ttfs/Marlboro.ttf", 28 );
-        if (gFont==NULL) {
-            printf("couldn't load font lol\n");
-        }
 
         //Main game loop
         while (!quit)
@@ -94,21 +70,6 @@ int main( int argc, char* args[] )
             //Find the mouse position relative to the window, and set it to mouseX and mouseY.
             SDL_GetMouseState(&mouseX, &mouseY);
 
-            const Uint8* keyStates = SDL_GetKeyboardState(NULL);
-
-            if (keyStates[SDL_SCANCODE_D])
-            {
-                b.vx = 10;
-            }
-            else if (keyStates[SDL_SCANCODE_A])
-            {
-                b.vx = -10;
-            }
-            else
-            {
-                b.vx = 0;
-            }
-
             //Has enough time passed to render the next frame?
             if (curTick>=nextFrame)
             {
@@ -120,82 +81,77 @@ int main( int argc, char* args[] )
                 //Has it been a second? Print the fps!
                 if (startTick+1000 < SDL_GetTicks())
                 {
-                    printf("FPS : %i\n",countedFrames);
                     fps = countedFrames;
                     countedFrames = 0;
                     startTick = SDL_GetTicks();
                 }
 
-                double speed = 50;
+
+
+
+
+
+
+
+                //Entity* ent = sc->getCurrentScene()->entities[0];
+                Scene* sce = sc->getCurrentScene();
+
+
+                double speed = 50.0;
 
                 const Uint8 *keys = SDL_GetKeyboardState(NULL);
                 if (keys[SDL_SCANCODE_D])
                 {
-                    p2.x += speed * delta;
+                    ent->x += speed * delta;
                 }
                 else if (keys[SDL_SCANCODE_A])
                 {
-                    p2.x -= speed * delta;
+                    ent->x -= speed * delta;
                 }
 
                 if (keys[SDL_SCANCODE_S])
                 {
-                    p2.y += speed * delta;
+                    //ent->y += speed * delta;
                 }
                 else if (keys[SDL_SCANCODE_W])
                 {
-                    p2.y -= speed * delta;
+                    ent->vy = -200*delta;
+
                 }
 
                 if (keys[SDL_SCANCODE_E]) {
-                    p2.r+=1*delta;
+                    //ent->setRotation(ent->r + 1*delta);
                 } else if(keys[SDL_SCANCODE_Q]) {
-                    p2.r-=1*delta;
+                    //ent->setRotation(ent->r - 1*delta);
                 }
 
+                sce->update(delta);
 
-                b.update(delta);
-                b2.update(delta);
+                printf("Dy: %9.6f\n", ent->dy);
 
-                p.update(delta);
-                p2.update(delta);
-
-                b.vy += delta * 9.8;
-                //p2.vx = .5;
-                MTV tt = checkCollision(p2, p);
-                if (tt.collided)
-                {
-                   // printf("o: %9.6f\n", tt.o);
-                    p2.x -= tt.axis.x;
-                    p2.y -= tt.axis.y;
-                    // printf("colliding true!\n");
-                }
-                else
-                {
-                    // printf("not colliding!\n");
-                }
-                // b.x = mouseX - b.w/2;
-                //b.y = mouseY - b.h/2;
-
-               // p.r+=0.174533*delta;
-
-
-
-
-
-                collisiontest(b, b2);
-
-                b.setRect();
-
-                std::vector<SDL_Point> e = b.getPoints();
-
-                for (SDL_Point p : e)
-                {
-                    //printf("x: %i, y: %i\n", p.x, p.y);
+                if (ent->dy == 0.0) {
+                    ent->vy = 0;
                 }
 
-                p3.clear();
+                ent->vy+=9.8*delta;
 
+
+                /**/
+                MTV collide = checkCollision(ent, ent2);
+
+                if (collide.collided) {
+                    ent->x-=collide.axis.x;
+                    ent->y-=collide.axis.y;
+                    //printf("collide\n");
+                }
+                /**/
+                printf("entx: %9.6f\n", ent->polygons[0].x + ent->x);
+
+                //Entity* ent = sc.getCurrentScene()->entities[0];
+                //ent->setRotation((curTick*delta*.2) );
+
+
+/*minsowski difference i wanna test with stuff of this later
                 std::vector<Vector2> points1 = p.getRealPoints();
                 std::vector<Vector2> points2 = p2.getRealPoints();
                 for (int i = 0, m = points1.size(); i < m; i++) {
@@ -206,13 +162,10 @@ int main( int argc, char* args[] )
                        // printf("%9.6f : %9.6f\n",x,y);
                     }
 
-                }
-
-              //  printf("%i size\n", p3.points.size());
+                }*/
 
 
                 render();
-                // SDL_Delay(ticksPerFrame);
             }
 
 
@@ -227,42 +180,27 @@ int main( int argc, char* args[] )
     //Deallocate and quit!
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    renderer = NULL;
+    window = NULL;
+
+    f.free();
+    delete(sc);
+    sc = NULL;
+
+    TTF_CloseFont(gFont);
+    gFont = NULL;
+
     IMG_Quit();
+    TTF_Quit();
     SDL_Quit();
     return 0;
 }
 
-void collisiontest(box& b1, box& b2)
-{
-
-    if (((b1.x < b2.x + b2.w) && (b1.y < b2.y + b2.h)) && ((b2.x < b1.x + b1.w) && (b2.y < b1.y + b1.h)))
-    {
-        // printf("collide!\n");
-        if (b1.y + b1.h > b2.y)
-        {
-            if (b1.dy > 0)
-            {
-                b1.y -= (b1.y+b1.h)-b2.y;;
-            }
-            else if (b1.dy < 0)
-            {
-                b1.y += (b2.y + b2.h) - b1.y;
-            }
-            b1.vy = 0;
-        }
-    }
-
-
-
-}
-
-
 bool init()
 {
 
-
     bool success = true;
-
+    sc = new SceneController();
     //Init video
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -276,6 +214,13 @@ bool init()
         if( TTF_Init() == -1 )
         {
             printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+            success = false;
+        }
+
+        int flags = IMG_INIT_PNG;
+        int initted = IMG_Init(flags);
+        if ((initted&flags) != flags) {
+            printf("Failed to initialize image! %s\n", IMG_GetError());
             success = false;
         }
 
@@ -298,112 +243,63 @@ bool init()
         }
     }
     return success;
+
 }
-
-//Load a texture from a string and return the created texture!
-SDL_Texture* loadTexture(std::string s)
-{
-    SDL_Surface* loadedSurface = IMG_Load(s.c_str());
-    if (loadedSurface==NULL)
-    {
-        printf("Could not load image! %s\n", IMG_GetError());
-        SDL_FreeSurface(loadedSurface);
-    }
-    else
-    {
-
-        //Convert Surface to Texture!
-        SDL_Texture* newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-        //Allow for alpha in png!
-        SDL_SetTextureBlendMode(newTexture, SDL_BLENDMODE_BLEND);
-        SDL_FreeSurface(loadedSurface);
-        return newTexture;
-    }
-    return NULL;
-}
-
-SDL_Texture* renderText(SDL_Texture* texture, std::string text, SDL_Color color) {
-
-    SDL_Surface* textSurface = TTF_RenderText_Solid(gFont, text.c_str(), color);
-    if (textSurface == NULL) {
-
-        printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
-    } else {
-
-        if (texture!=NULL) {
-            SDL_DestroyTexture(texture);
-        }
-        texture = SDL_CreateTextureFromSurface(renderer, textSurface);
-
-        SDL_FreeSurface(textSurface);
-    }
-}
-
-//Render a texture with position and size
-bool renderTexture(SDL_Renderer* r, SDL_Texture* t, int x, int y, int w, int h)
-{
-
-    SDL_Rect rect = {x,y,w,h};
-    SDL_RenderCopy(r, t, NULL, &rect);
-
-    return true;
-}
-
-
 
 //Calculate clicks
 void mouseClick()
 {
+    int x = mouseX;
+    int y = mouseY;
+
+    printf("MouseX: %i, MouseY: %i\n", x, y);
+
+    Entity* ent = sc->getCurrentScene()->entities[0];
+    ent->x = x;
+    ent->y = y;
+    ent->setScale(2);
+    //ent->setRotation(0.785398);
+}
+
+bool loadMedia() {
+    bool success = true;
+    happy.loadTexture(renderer, "happy.png");
+    happy.setSize(100,100);
+
+    gFont = TTF_OpenFont( "ttfs/Marlboro.ttf", 28 );
+    if (gFont==NULL) {
+        printf("couldn't load font gfont! %s\n", TTF_GetError());
+        success = false;
+    }
+    return success;
 }
 
 
 bool render()
 {
+    //Set clear out color!
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer); // Clear our screen
 
 
 
-    //b.render(renderer);
-    //b2.render(renderer);
-    p.render(renderer);
-    p2.render(renderer);
-    for (int i = 0, m=p3.size(); i < m; i++)
-    {
-        int i2 = i + 1 == m ? 0 : i + 1;
-        // get the current vertex
-        Vector2 p1 = Vector2(p3[i].x,p3[i].y);
-        // get the next vertex
-        Vector2 p2 = Vector2(p3[i2].x,p3[i2].y);
-        //Vector2 pos = Vector2(x,y);
+    sc->getCurrentScene()->render(renderer);
 
-
-
-
-        SDL_RenderDrawLine(renderer, (p1.x), (p1.y), (p2.x), (p2.y));
-
-       // SDL_RenderDrawPoint(renderer, x,y);
-    }
-
-    SDL_RenderDrawPoint(renderer, 25, 25);
-
-    //SDL_RenderDrawPoint(renderer, p.x + p2.x, p.y + p2.y);
-
-
-
-
+    //FPS Drawing
     std::stringstream s;
     s.str("");
-    s<<fps;
+    s<<"FPS:"<<fps;
     SDL_Color col = {0,255,0,255};
 
     f.renderText(renderer, s.str().c_str(), col, gFont);
     SDL_SetRenderDrawColor(renderer, 255,255,255,255);
     f.render(renderer, 5, 5);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+    happy.render(renderer, 100, 100);
+
     //Present our screen to the window!
     SDL_RenderPresent(renderer);
 
-    //printf("fps lol: %s\n", s.str().c_str());
 
     return true;
 }

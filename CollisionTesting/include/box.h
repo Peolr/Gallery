@@ -1,41 +1,18 @@
 #ifndef BOX_H
 #define BOX_H
 
-#include <SDL.h>
-#include <vector>
+#include <Polygon.h>
 
-class box
+
+class Box : public Polygon
 {
-public:
-    box(float x, float y, int w, int h);
-    virtual ~box();
+    public:
+        Box(double x, double y, double w, double h);
+        virtual ~Box();
 
-    float x;
-    float y;
-    int w;
-    int h;
+    protected:
 
-    float vx;
-    float vy;
-
-    float dx;
-    float dy;
-
-    bool frozen;
-
-    int color[4];
-
-    SDL_Rect rect;
-
-    void render(SDL_Renderer* renderer);
-    void setRect();
-    void update(int delta);
-
-    std::vector<SDL_Point> getPoints();
-
-protected:
-
-private:
+    private:
 };
 
 #endif // BOX_H

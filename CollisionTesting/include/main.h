@@ -4,20 +4,28 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <string>
-#include <box.h>
 #include <Polygon.h>
 #include <SDL_ttf.h>
 #include <cstdio>
-#include <Font.h>
+#include <JTexture.h>
+#include <MTV.h>
+#include <math.h>
+#include <vector>
+#include <SAT.h>
+#include <sstream>
+#include <SceneController.h>
+#include <Box.h>
+#include <Scene.h>
 
-
+int screenWidth = 600;
+int screenHeight = 600;
 
 SDL_Renderer* renderer;//Renderer
 SDL_Window* window;//Window
-SDL_Texture* background;//3x3 grid
 
-SDL_Texture* loadTexture(std::string s);
+SceneController* sc;
 
+SDL_Event e;
 
 bool renderTexture(SDL_Texture* t, int x, int y, int w, int h);
 bool init();
@@ -27,5 +35,10 @@ bool render();
 void mouseClick();
 
 TTF_Font *gFont;
+Uint32 fps;
+JTexture f;
+//Variables for the mouse positions!
+int mouseX;
+int mouseY;
 
 #endif // MAIN_H

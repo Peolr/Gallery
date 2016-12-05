@@ -29,6 +29,7 @@ void Polygon::setup(double x, double y) {
     this->vy = 0;
     this->frozen = false;
     this->r = 0;
+    scale = 1;
 
     for (int t = 0; t<4; t++)
     {
@@ -52,7 +53,7 @@ void Polygon::setCenter()
     for (int i = 0, m = points.size(); i < m; i++)
     {
 
-        Vector2 p = points[i];
+        Vector2 p = Vector2(points[i].x, points[i].y).scale(scale);
 
         if (p.x < xMin)
         {
@@ -97,13 +98,19 @@ void Polygon::reCalc()
     for (int i = 0, m = points.size(); i < m; i++)
     {
 
-        Vector2 p = Vector2(points[i].x,points[i].y);
-        p.sub(center);
-        p.rotate(r);
-        p.add(center);
+        Vector2 p = Vector2(points[i].x,points[i].y).scale(scale);
+       // p.sub(center);
+        //p.rotate(r);
+       // p.add(center);
         real.insert(real.end(), p);
 
     }
+
+}
+
+void Polygon::clearPoints() {
+
+    points.clear();
 
 }
 
@@ -140,33 +147,40 @@ Polygon::~Polygon()
 }
 
 
-void Polygon::render(SDL_Renderer* renderer)
+void Polygon::render(SDL_Renderer* renderer, double ddx, double ddy, double ox, double oy, double zoom)
 {
 
     SDL_SetRenderDrawColor(renderer, color[0], color[1], color[2], color[3]);
-
-    double x = this->x;
-    double y = this->y;
 
     for (int i = 0, m=points.size(); i < m; i++)
     {
         int i2 = i + 1 == m ? 0 : i + 1;
         // get the current vertex
-        Vector2 p1 = Vector2(points[i].x,points[i].y);
+        Vector2 p1 = Vector2(points[i].x,points[i].y).scale(scale).scale(zoom);
         // get the next vertex
-        Vector2 p2 = Vector2(points[i2].x,points[i2].y);
-        Vector2 pos = Vector2(x,y);
+        Vector2 p2 = Vector2(points[i2].x,points[i2].y).scale(scale).scale(zoom);
+        Vector2 pos = Vector2(x*scale,y*scale).scale(zoom);
+        Vector2 pos2 = Vector2(ddx, ddy).scale(zoom);
+        Vector2 org = Vector2(ox*zoom, oy*zoom).scale(zoom);
 
 
-        p1.sub(center);
-        p1.rotate(r);
+        //p1.sub(center);//.rotate(r).add(pos);p1.add(pos);
+        //p1.scale(scale);
         p1.add(pos);
+        p1.sub(org);
+        p1.rotate(r);
+        p1.add(pos2);
         //p1.rotate(r);
 
 
-        p2.sub(center);
-        p2.rotate(r);
+        //p2.sub(center);//.rotate(r).add(pos);
+        //p2.scale(scale);
         p2.add(pos);
+        p2.sub(org);
+        p2.rotate(r);
+        p2.add(pos2);
+
+
         // p2.rotate(r);
 
 
@@ -213,8 +227,7 @@ std::vector<Vector2> Polygon::getPoints()
 
 Vector2 Polygon::getRealPos(Vector2 p)
 {
-
-    Vector2 ret = {(x - center.x + p.x), (y - center.y + p.y)};
+    Vector2 ret = {(x - parent->x + p.x), (y - parent->y + p.y)};
     return ret;
 
 }

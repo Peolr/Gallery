@@ -1,10 +1,19 @@
 #include "SAT.h"
+#include <cstdio>
 
+MTV checkCollision(Entity* a, Entity* b) {
 
-MTV checkCollision(Polygon a, Polygon b) {
-
-    MTV res = isColliding(a, b);
-    return res;
+    std::vector<Polygon> polys = a->polygons;
+    std::vector<Polygon> polys2 = b->polygons;
+    for (int i = 0, m = polys.size(); i < m; i++) {
+        for (int i2 = 0, m2 = polys2.size(); i < m2; i++) {
+            MTV res = isColliding(polys[i], polys2[i2]);
+            if (res.collided) {
+                return res;
+            }
+        }
+    }
+    return MTV(false);
 
 }
 
@@ -84,17 +93,17 @@ Vector2 projectPolygon(Polygon p, Vector2 axis) {
     int x = p.x;
     int y = p.y;
 
-    Vector2 d = p.real[0];
+    Vector2 d = Vector2(0.0,0.0);
     d.add(Vector2(x,y));
-    d.sub(p.center);
+    d.add(Vector2(p.parent->x,p.parent->y));
     double min = d.dot(axis);
     double max = min;
-    for (int i = 1, m = p.real.size(); i < m; i++)
+    for (int i = 1, m = p.points.size(); i < m; i++)
     {
         // NOTE: the axis must be normalized to get accurate projections
-        Vector2 rp = p.real[i];
-        rp.add(Vector2(x,y));
-        rp.sub(p.center);
+        Vector2 rp = Vector2(p.points[i].x,p.points[i].y);
+        rp.add(Vector2(p.parent->x,p.parent->y));
+        //printf("p.y: %i, parenty: %9.6f\n", y, p.parent->y);
         double dot = rp.dot(axis);
         if (dot < min)
         {

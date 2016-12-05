@@ -11,13 +11,13 @@ class Vector2
         double x;
         double y;
 
-        void normalize();
-        void reverse();
-        void rotate(double r);
-        void add(Vector2 other);
-        void sub(Vector2 other);
-        void scale(double s);
-        void perp();
+        Vector2 normalize();
+        Vector2 reverse();
+        Vector2 rotate(double r);
+        Vector2 add(Vector2 other);
+        Vector2 sub(Vector2 other);
+        Vector2 scale(double s);
+        Vector2 perp();
 
         double dot(Vector2 other);
         double len();

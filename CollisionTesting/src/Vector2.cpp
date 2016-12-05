@@ -20,28 +20,31 @@ Vector2::~Vector2()
 }
 
 
-void Vector2::normalize() {
+Vector2 Vector2::normalize() {
 
     double len = this->len();
     if (len > 0) {
         x/=len;
         y/=len;
     }
-
+    return *this;
 }
-void Vector2::reverse() {
+Vector2 Vector2::reverse() {
 
     x = -x;
     y = -y;
 
+    return *this;
 };
-void Vector2::rotate(double r) {
+Vector2 Vector2::rotate(double r) {
 
     double x2 = x;
     double y2 = y;
 
     x = x2 * cos(r) - y2 * sin(r);
     y = x2 * sin(r) + y2 * cos(r);
+
+    return *this;
 
 };
 
@@ -52,30 +55,32 @@ double Vector2::len() {
 }
 
 
-void Vector2::add(Vector2 other) {
+Vector2 Vector2::add(Vector2 other) {
 
     x += other.x;
     y += other.y;
+    return *this;
 
 }
-void Vector2::sub(Vector2 other) {
+Vector2 Vector2::sub(Vector2 other) {
 
     x -= other.x;
     y -= other.y;
+    return *this;
 
 }
-void Vector2::scale(double s) {
+Vector2 Vector2::scale(double s) {
 
     x *= s;
     y *= s;
-
+    return *this;
 }
-void Vector2::perp() {
+Vector2 Vector2::perp() {
 
     double x2 = x;
     x = y;
     y = -x2;
-
+    return *this;
 }
 double Vector2::dot(Vector2 other) {
     return x * other.x + y * other.y;
