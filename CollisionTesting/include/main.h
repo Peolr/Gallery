@@ -16,6 +16,7 @@
 #include <SceneController.h>
 #include <Box.h>
 #include <Scene.h>
+#include <Save.h>
 
 int screenWidth = 600;
 int screenHeight = 600;
@@ -30,6 +31,8 @@ SDL_Event e;
 bool renderTexture(SDL_Texture* t, int x, int y, int w, int h);
 bool init();
 bool loadMedia();
+
+
 bool render();
 
 void mouseClick();
