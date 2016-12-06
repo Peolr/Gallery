@@ -11,7 +11,6 @@ class SceneController
         virtual ~SceneController();
 
         int currentSceneId;
-
         std::vector<Scene*> scenes;
 
         Scene* getCurrentScene();

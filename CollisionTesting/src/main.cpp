@@ -1,4 +1,7 @@
 #include "main.h"
+
+#include <iostream>
+#include <bitset>
 //Boolean to check if we should quit the program (press the x button)
 bool quit;
 
@@ -13,6 +16,26 @@ int main( int argc, char* args[] )
     if (init() && loadMedia())
     {
 
+        double it = 10.4;
+        int it2 = 10000;
+        printf("size of it: %i\n", sizeof(it));
+
+        Save save("test2.txt");
+        save.open();
+        save.writeBool(false);
+        save.writeInt(6969);
+        //save.writeInt(it2);
+        //save.writeInt(6969);
+        //save.writeDouble(it);
+        //save.load();
+        save.readBool();
+        save.readInt();
+        //save.readInt();
+        //save.readDouble();
+        save.close();
+
+        printf("lol %d\n", (int)2.2);
+
         Scene* scene = sc->newScene();
 
         Entity* ent = new Entity(0.0, 300.0);
@@ -23,15 +46,8 @@ int main( int argc, char* args[] )
         ent->addPolygon(poly);
         ent->addPolygon(poly2);
 
-        //scene->moveCamera(0,200);
-
-        scene->zoom = 100.0;
-
-
-
         Polygon* poly22 = new Box(0.0,0.0,600.0,30.0);
         ent2->addPolygon(poly22);
-
 
         scene->addEntity(ent2);
         scene->addEntity(ent);
@@ -71,7 +87,7 @@ int main( int argc, char* args[] )
             }
 
             //Find the mouse position relative to the window, and set it to mouseX and mouseY.
-            SDL_GetMouseState(&mouseX, &mouseY);
+
 
             //Has enough time passed to render the next frame?
             if (curTick>=nextFrame)
@@ -99,7 +115,13 @@ int main( int argc, char* args[] )
                 //Entity* ent = sc->getCurrentScene()->entities[0];
                 Scene* sce = sc->getCurrentScene();
 
+                SDL_GetMouseState(&mouseX, &mouseY);
 
+                mouseX+=sce->cameraX;
+                mouseY+=sce->cameraY;
+
+                mouseX*=sce->zoom/100;
+                mouseY*=sce->zoom/100;
                 double speed = 100.0;
 
                 const Uint8 *keys = SDL_GetKeyboardState(NULL);
@@ -167,26 +189,6 @@ int main( int argc, char* args[] )
                 if (xx > screenWidth - margin) {
                     sce->cameraX+=(xx-(screenWidth - margin));
                 }
-
-
-
-
-                //Entity* ent = sc.getCurrentScene()->entities[0];
-                //ent->setRotation((curTick*delta*.2) );
-
-
-/*minsowski difference i wanna test with stuff of this later
-                std::vector<Vector2> points1 = p.getRealPoints();
-                std::vector<Vector2> points2 = p2.getRealPoints();
-                for (int i = 0, m = points1.size(); i < m; i++) {
-                    for (int u = 0, mu = points2.size(); u < mu; u++) {
-                        double x = (points1[i].x - points2[u].x) + 25;
-                        double y = (points1[i].y - points2[u].y) + 25;
-                        p3.insert(p3.end(), Vector2(x,y));
-                       // printf("%9.6f : %9.6f\n",x,y);
-                    }
-
-                }*/
 
 
                 render();
@@ -314,12 +316,11 @@ bool render()
     s.str("");
     s<<"FPS:"<<fps;
     SDL_Color col = {0,255,0,255};
-
     f.renderText(renderer, s.str().c_str(), col, gFont);
     SDL_SetRenderDrawColor(renderer, 255,255,255,255);
     f.render(renderer, 5, 5);
 
-    happy.render(renderer, 100, 100);
+    //happy.render(renderer, 100, 100);
 
     //Present our screen to the window!
     SDL_RenderPresent(renderer);

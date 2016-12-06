@@ -5,6 +5,7 @@
 #include <Polygon.h>
 #include <SDL.h>
 #include <Scene.h>
+
 class Polygon;
 class Scene;
 class Entity

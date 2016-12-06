@@ -49,6 +49,7 @@ bool JTexture::loadTexture(SDL_Renderer* renderer, std::string s) {
     return true;
 }
 
+//Turns the texture into text with string and color with font.
 bool JTexture::renderText(SDL_Renderer* renderer, std::string text, SDL_Color color, TTF_Font* gFont) {
 
     free();
@@ -69,7 +70,7 @@ bool JTexture::renderText(SDL_Renderer* renderer, std::string text, SDL_Color co
     return true;
 }
 
-
+//render the texture
 bool JTexture::render(SDL_Renderer* renderer, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip )
 {
 	//Set rendering space and render to screen

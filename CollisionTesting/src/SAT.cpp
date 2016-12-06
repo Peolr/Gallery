@@ -1,7 +1,9 @@
 #include "SAT.h"
 #include <cstdio>
 
-MTV checkCollision(Entity* a, Entity* b) {
+//Take all polygons of both entities and check for collision. Get the biggest move vector to find the furthest vector to push it away with.
+MTV checkCollision(Entity* a, Entity* b)
+{
 
     std::vector<Polygon*> polys = a->polygons;
     std::vector<Polygon*> polys2 = b->polygons;
@@ -9,10 +11,14 @@ MTV checkCollision(Entity* a, Entity* b) {
     int max = 0;
     MTV res = MTV(false);
 
-    for (int i = 0, m = polys.size(); i < m; i++) {
-        for (int i2 = 0, m2 = polys2.size(); i2 < m2; i2++) {
+    //We need to loop thru every single polygon in both entities!
+    for (int i = 0, m = polys.size(); i < m; i++)
+    {
+        for (int i2 = 0, m2 = polys2.size(); i2 < m2; i2++)
+        {
             MTV cand = isColliding(polys[i], polys2[i2]);
-            if (cand.collided && cand.o > max) {
+            if (cand.collided && cand.o > max)
+            {
                 max = cand.o;
                 res = cand;
             }
@@ -22,18 +28,13 @@ MTV checkCollision(Entity* a, Entity* b) {
 
 }
 
-MTV isColliding(Polygon* shape1, Polygon* shape2) {
+//Loop through all axes of a polygon, and project all the points of both polygons and calculate if they overlap. If they don't we automagically know it doesn't collide.
+bool loopThruAxes(std::vector<Vector2> axes, Polygon* shape1, Polygon* shape2, double* o, Vector2* sAxis)
+{
 
-    std::vector<Vector2> axes1 = shape1->getAxes();
-    std::vector<Vector2> axes2 = shape2->getAxes();
-
-    double o = std::numeric_limits<double>::infinity();
-    Vector2 sAxis = Vector2(0,0);
-    bool flip;
-// loop over the axes1
-    for (int i = 0, m = axes1.size(); i < m; i++)
+    for (int i = 0, m = axes.size(); i < m; i++)
     {
-        Vector2 axis = axes1[i];
+        Vector2 axis = axes[i];
         // project both shapes onto the axis
         Vector2 p1 = projectPolygon(shape1, axis);
         Vector2 p2 = projectPolygon(shape2, axis);
@@ -41,62 +42,55 @@ MTV isColliding(Polygon* shape1, Polygon* shape2) {
         if (!overlap(p1, p2))
         {
             // then we can guarantee that the shapes do not overlap
-            return MTV(false);
+            return true;
         }
 
-        double ot = getOverlap(p1, p2, &flip);
+        double ot = getOverlap(p1, p2);
         double ab = fabs(ot);
 
-        if (ab < o)
+        if (ab < *o)
         {
-            o = ab;
-            sAxis.x = axis.x;
-            sAxis.y = axis.y;
+            *o = ab;
+            sAxis->x = axis.x;
+            sAxis->y = axis.y;
             if (ot < 0)
             {
-                sAxis.reverse();
+                sAxis->reverse();
             }
         }
 
     }
-// loop over the axes2
-    for (int i = 0, m = axes2.size(); i < m; i++)
-    {
-        Vector2 axis = axes2[i];
-        // project both shapes onto the axis
-        Vector2 p1 = projectPolygon(shape1, axis);
-        Vector2 p2 = projectPolygon(shape2, axis);
-        // do the projections overlap?
-        if (!overlap(p1,p2))
-        {
-            // then we can guarantee that the shapes do not overlap
-            return MTV(false);
-        }
-        double ot = getOverlap(p1, p2, &flip);
-        double ab = abs(ot);
-        if (ab < o)
-        {
-            o = ab;
-            sAxis.x = axis.x;
-            sAxis.y = axis.y;
-            if (ot < 0)
-            {
-                sAxis.reverse();
-            }
-        }
+
+    return false;
+}
+
+//Are we colliding? If so return MTV!
+MTV isColliding(Polygon* shape1, Polygon* shape2)
+{
+
+    std::vector<Vector2> axes1 = shape1->getAxes();
+    std::vector<Vector2> axes2 = shape2->getAxes();
+
+    double o = std::numeric_limits<double>::infinity();
+    Vector2 sAxis = Vector2(0,0);
+
+    bool notCollide = !(!loopThruAxes(axes1, shape1, shape2, &o, &sAxis) && !loopThruAxes(axes2, shape1, shape2, &o, &sAxis));
+
+    //no intersection occurred
+    if (notCollide) {
+        return MTV(false);
     }
 
+    //Scale direction for o distance
     sAxis.scale(o);
-// if we get here then we know that every axis had overlap on it
-// so we can guarantee an intersection
     return MTV(sAxis,o);
 
 }
 
-Vector2 projectPolygon(Polygon* p, Vector2 axis) {
-
-    //int x = p.x;
-    //int y = p.y;
+//Takes a polygon, and loops through points and "projects" all points onto a plane and returns a min and a max,
+//we will use this to determine an overlap later on.
+Vector2 projectPolygon(Polygon* p, Vector2 axis)
+{
 
     Vector2 d = p->getRealPos(Vector2(p->points[0].x, p->points[0].y));
     double min = d.dot(axis);
@@ -121,24 +115,24 @@ Vector2 projectPolygon(Polygon* p, Vector2 axis) {
 
 }
 
+//Do both mins and maxes overlap?
 bool overlap (Vector2 a, Vector2 b)
 {
-    // printf("aMin: %i, aMax: %i, bMin: %i, bMax: %i\n", a.x, a.y, b.x, b.y);
+    //Check if they don't overlap, and send the opposite
     return !(a.y < b.x || b.y < a.x);
 }
 
-double getOverlap(Vector2 a, Vector2 b, bool* flip)
+//Find the best "overlap" in 2 vectors.
+double getOverlap(Vector2 a, Vector2 b)
 {
 
     double o = 0;
 
     if (a.x < b.x)
     {
-        *flip = true;
         if (a.y < b.y)
         {
             o = a.y - b.x;
-            *flip = false;
         }
         else
         {
@@ -149,11 +143,9 @@ double getOverlap(Vector2 a, Vector2 b, bool* flip)
     }
     else
     {
-        *flip = false;
         if (a.y > b.y)
         {
             o = a.x - b.y;
-            *flip = true;
         }
         else
         {

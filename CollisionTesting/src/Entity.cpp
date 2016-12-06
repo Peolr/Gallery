@@ -42,7 +42,6 @@ void Entity::render(SDL_Renderer* renderer) {
 
 void Entity::update(double delta)
 {
-
     if (!frozen)
     {
         dx = x;
@@ -53,23 +52,12 @@ void Entity::update(double delta)
 
         dx = x - dx;
         dy = y - dy;
-
-
-        for (int i = 0, m = polygons.size(); i < m; i++) {
-            polygons[i]->reCalc();
-        }
-
     }
     else
     {
-
         dx = 0;
         dy = 0;
-
     }
-
-
-
 }
 
 void Entity::addPolygon(Polygon* p) {

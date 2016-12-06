@@ -9,43 +9,31 @@
 
 Polygon::Polygon(double x, double y)
 {
-
     setup(x,y);
-
-
 }
 
 Polygon::Polygon() {
-
     setup(0,0);
-
 }
 
 void Polygon::setup(double x, double y) {
 
     this->x = x;
     this->y = y;
-    this->vx = 0;
-    this->vy = 0;
     this->frozen = false;
     this->r = 0;
-    scale = 1;
+    scale = 1.0;
 
     for (int t = 0; t<4; t++)
     {
         this->color[t] = 255;
     }
-    dx = 0;
-    dy = 0;
-
     center = {0,0};
 
 }
 
 void Polygon::setCenter()
 {
-
-
     double xMin=0.0;
     double yMin=0.0;
     double xMax=0.0;
@@ -59,22 +47,18 @@ void Polygon::setCenter()
         {
             xMin = p.x;
         }
-
         if (p.y < yMin)
         {
             yMin = p.y;
         }
-
         if (p.x > xMax)
         {
             xMax = p.x;
         }
-
         if (p.y > yMax)
         {
             yMax = p.y;
         }
-
     }
 
     center = {(xMin+xMax)/2.0,(yMin+yMax)/2.0};
@@ -84,40 +68,14 @@ void Polygon::setCenter()
     this->xMax = xMax;
     this->yMax = yMax;
 
-    reCalc();
-
-
-}
-
-
-void Polygon::reCalc()
-{
-
-    real.clear();
-
-    for (int i = 0, m = points.size(); i < m; i++)
-    {
-
-        Vector2 p = Vector2(points[i].x,points[i].y).scale(scale);
-       // p.sub(center);
-        //p.rotate(r);
-       // p.add(center);
-        real.insert(real.end(), p);
-
-    }
-
 }
 
 void Polygon::clearPoints() {
-
     points.clear();
-
 }
 
 void Polygon::addPoints(int argumentAmount, ... )
 {
-
-
     if (argumentAmount % 2 == 0)
     {
         va_list arguments;
@@ -137,7 +95,6 @@ void Polygon::addPoints(int argumentAmount, ... )
         va_end(arguments);
 
         setCenter();
-
     }
 }
 
@@ -171,36 +128,6 @@ void Polygon::render(SDL_Renderer* renderer)
 
 void Polygon::update(int delta)
 {
-
-    if (!frozen)
-    {
-        dx = x;
-        dy = y;
-
-        x += vx;
-        y += vy;
-
-        dx = x - dx;
-        dy = y - dy;
-
-    }
-    else
-    {
-
-        dx = 0;
-        dy = 0;
-
-    }
-    reCalc();
-
-
-}
-
-std::vector<Vector2> Polygon::getPoints()
-{
-
-    return real;
-
 }
 
 Vector2 Polygon::getRealPos(Vector2 p)
@@ -208,6 +135,7 @@ Vector2 Polygon::getRealPos(Vector2 p)
 
     double zoom = parent->scene->zoom/100.0;
     double scale = parent->scale*zoom;
+
     double cameraX = parent->scene->cameraX;
     double cameraY = parent->scene->cameraY;
 
@@ -224,17 +152,6 @@ Vector2 Polygon::getRealPos(Vector2 p)
     //p.rotate(r);
     p.add(px);
     return p;
-
-}
-
-std::vector<Vector2> Polygon::getRealPoints()
-{
-    std::vector<Vector2> ret;
-    for (int i = 0, m = points.size(); i < m; i++)
-    {
-        ret.insert(ret.end(), getRealPos(points[i]));
-    }
-    return ret;
 
 }
 
@@ -255,10 +172,8 @@ std::vector<Vector2> Polygon::getAxes()
 
         Vector2 edge = Vector2(p2.x,p2.y);
         edge.sub(p1);
-        // get either perpendicular vector
         edge.perp();
         edge.normalize();
-        // the perp method is just (x, y) => (-y, x) or (y, -x)
         axes.insert(axes.end(), edge);
     }
     return axes;

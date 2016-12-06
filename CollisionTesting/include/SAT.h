@@ -11,7 +11,7 @@
 
 double dot(Vector2 a, Vector2 b);
 bool overlap (Vector2 a, Vector2 b);
-double getOverlap(Vector2 a, Vector2 b, bool* flip);
+double getOverlap(Vector2 a, Vector2 b);
 
 
 MTV checkCollision(Entity* a, Entity* b);
